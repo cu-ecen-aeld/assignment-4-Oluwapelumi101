@@ -1,7 +1,3 @@
-mkdir -p base_external/package
-cat > base_external/Config.in <<'EOF'
 menu "Project Base packages"
-    # Add your external packages here; example for aesd-assignments:
     source "$BR2_EXTERNAL_PROJECT_BASE_PATH/package/aesd-assignments/Config.in"
 endmenu
-EOF

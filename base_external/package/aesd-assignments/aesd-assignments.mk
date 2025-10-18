@@ -20,8 +20,13 @@ AESD_ASSIGNMENTS_SUBDIR = finder-app
 AESD_ASSIGNMENTS_MAKE_OPTS = CC="$(TARGET_CC)"
 
 
+# define AESD_ASSIGNMENTS_BUILD_CMDS
+# 	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D)/finder-app all
+# endef
+
+# --- Build ---
 define AESD_ASSIGNMENTS_BUILD_CMDS
-	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D)/finder-app all
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/$(AESD_ASSIGNMENTS_SUBDIR) $(AESD_ASSIGNMENTS_MAKE_OPTS)
 endef
 
 
@@ -29,17 +34,17 @@ endef
 # 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/$(AESD_ASSIGNMENTS_SUBDIR) $(AESD_ASSIGNMENTS_MAKE_OPTS)
 # endef
 
-# TODO add your writer, finder and finder-test utilities/scripts to the installation steps below
-define AESD_ASSIGNMENTS_INSTALL_TARGET_CMDS
-	$(INSTALL) -d 0755 $(@D)/conf/ $(TARGET_DIR)/etc/finder-app/conf/
-	$(INSTALL) -m 0755 $(@D)/conf/* $(TARGET_DIR)/etc/finder-app/conf/
-	$(INSTALL) -m 0755 $(@D)/assignment-autotest/test/assignment4/* $(TARGET_DIR)/bin
+# # TODO add your writer, finder and finder-test utilities/scripts to the installation steps below
+# define AESD_ASSIGNMENTS_INSTALL_TARGET_CMDS
+# 	$(INSTALL) -d 0755 $(@D)/conf/ $(TARGET_DIR)/etc/finder-app/conf/
+# 	$(INSTALL) -m 0755 $(@D)/conf/* $(TARGET_DIR)/etc/finder-app/conf/
+# 	$(INSTALL) -m 0755 $(@D)/assignment-autotest/test/assignment4/* $(TARGET_DIR)/bin
 
-	$(INSTALL) -D -m 0755 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/finder.sh      $(TARGET_DIR)/usr/bin/finder.sh
-	$(INSTALL) -D -m 0755 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/finder-test.sh $(TARGET_DIR)/usr/bin/finder-test.sh
-	$(INSTALL) -D -m 0755 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/finder-test.sh $(TARGET_DIR)/usr/bin/finder-test.sh
+# 	$(INSTALL) -D -m 0755 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/finder.sh      $(TARGET_DIR)/usr/bin/finder.sh
+# 	$(INSTALL) -D -m 0755 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/finder-test.sh $(TARGET_DIR)/usr/bin/finder-test.sh
+# 	$(INSTALL) -D -m 0755 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/finder-test.sh $(TARGET_DIR)/usr/bin/finder-test.sh
 
-endef
+# endef
 
 
 # # Install scripts + binary; conf files to /etc/finder-app/conf
@@ -56,6 +61,17 @@ endef
 # 	done
 # endef
 
+# --- Install into target rootfs ---
+define AESD_ASSIGNMENTS_INSTALL_TARGET_CMDS
+	# scripts/binaries
+	$(INSTALL) -D -m 0755 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/finder.sh      $(TARGET_DIR)/usr/bin/finder.sh
+	$(INSTALL) -D -m 0755 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/finder-test.sh $(TARGET_DIR)/usr/bin/finder-test.sh
+	$(INSTALL) -D -m 0755 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/writer         $(TARGET_DIR)/usr/bin/writer
+
+	# config directory and files
+	$(INSTALL) -d -m 0755 $(TARGET_DIR)/etc/finder-app/conf
+	$(INSTALL) -m 0644 $(@D)/$(AESD_ASSIGNMENTS_SUBDIR)/conf/* $(TARGET_DIR)/etc/finder-app/conf/
+endef
 
 
 $(eval $(generic-package))
