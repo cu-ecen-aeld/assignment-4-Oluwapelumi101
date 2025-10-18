@@ -1,0 +1,5 @@
+mkdir -p base_external
+cat > base_external/external.desc <<'EOF'
+name: project_base
+desc: ECEN AELD Buildroot external
+EOF
